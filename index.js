@@ -1,39 +1,75 @@
 const web3=require('@solana/web3.js')
+const splToken =require('@solana/spl-token');
+const fs =require('fs');
 
-
-
-const payer = web3.Keypair.generate();
-
-
-const mint = web3.Keypair.generate();
-
+const {createMint,createAccount, getAssociatedTokenAddress, TOKEN_PROGRAM_ID}=splToken;
 
 const connection = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
 
-console.log("payer kepair:", payer);
-
-console.log("payer kepair:", mint);
+const data= JSON.parse(fs.readFileSync("./data.json"))
 
 
-async function sendSol() {
-    try {
-        if (!(payer.publicKey instanceof web3.PublicKey)) {
-            console.log('wallet.publicKey is not a valid PublicKey');
-        }
-        signatiuretx = await connection.requestAirdrop(
-            connection,
-            payer.publicKey,
-            2 * web3.LAMPORTS_PER_SOL
-          );
-         await  connection.confirmTransaction(signatiuretx, "confirmed")
-          console.log("Airdrop signature; ", signatiuretx)
-        
-        
-    } catch (error) {
-        console.log("transaction failed", error)
-        
+
+const SecretKeys= Uint8Array.from(data.SecretKey);
+
+console.log("the data is", data);
+console.log(" secret key:", SecretKeys);
+console.log("secret key size:",data.SecretKey.length);
+const payer=web3.Keypair.fromSecretKey(SecretKeys);
+console.log(payer);
+console.log("payer public key:", payer.publicKey.toBase58())
+
+
+
+async function checkbalance(){
+    const AccountBalance=await connection.getBalance(payer.publicKey)
+    console.log("balance is ", AccountBalance)
+}
+checkbalance();
+
+function storageData( value){
+
+    if(!fs.existsSync("./Datas.json")){
+        console.log("path not found");
     }
+    try {
+        const data ={
+            dummy:value,
+            mintAc: null,
+            transaction:[],
+        }
+        fs.writeFileSync("./Datas.json", JSON.stringify(data))
+        console.log("Data stored Successfully")
+    } catch (error) {
+        console.log("not storing data", error)
+    }
+    
 }
 
+function addTransaction(signatiuretx){
+    const Datas=JSON.parse(fs.readFileSync("./Datas.json"))
+    Datas.transaction.push(signatiuretx)
+    
 
-sendSol();
+    fs.writeFileSync("./Datas.json", JSON.stringify(Datas));
+    console.log("Transaction stored Successfully..")
+}
+const datas={
+    "signature": "5z1g2nR7Gj9NpXjWVQz3XMd1...",
+    "timestamp": "2025-01-21T12:34:56.789Z"
+  }
+
+addTransaction(datas);
+
+
+
+
+
+
+
+
+
+
+
+
+
