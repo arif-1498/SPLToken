@@ -54,12 +54,44 @@ function addTransaction(signatiuretx){
     fs.writeFileSync("./Datas.json", JSON.stringify(Datas));
     console.log("Transaction stored Successfully..")
 }
-const datas={
-    "signature": "5z1g2nR7Gj9NpXjWVQz3XMd1...",
-    "timestamp": "2025-01-21T12:34:56.789Z"
-  }
+async function creatToken(){
+    try{
 
-addTransaction(datas);
+        const mintAddress=await createMint(
+            connection,
+            payer,
+            payer.publicKey, 
+            null,
+            6,
+        )
+
+        console.log("mint address:", mintAddress.toBase58());
+        console.log("mint:", mintAddress);
+        const Datas=JSON.parse(fs.readFileSync("./Datas.json"))
+        Datas.mintAc=mintAddress;
+        fs.writeFileSync("./Datas.json", JSON.stringify(Datas))
+        console.log ("mint address store successfully...")
+
+    }
+    catch(error){
+
+        console.log("token creation failed:", error)
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
