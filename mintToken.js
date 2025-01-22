@@ -1,6 +1,5 @@
 const web3 = require("@solana/web3.js");
-console.log(web3.PublicKey);
-const helper=require("./helpers")
+const helper = require("./helpers");
 
 const splToken = require("@solana/spl-token");
 console.log(splToken.TOKEN_PROGRAM_ID);
@@ -8,12 +7,9 @@ console.log(splToken.TOKEN_PROGRAM_ID);
 const fs = require("fs");
 
 const data = JSON.parse(fs.readFileSync("./data.json"));
-console.log(data);
 const SecretKeys = Uint8Array.from(data.SecretKey);
 
 const payer = web3.Keypair.fromSecretKey(SecretKeys);
-
-console.log("payer is ", payer);
 
 const datas = JSON.parse(fs.readFileSync("./Datas.json"));
 console.log(datas.mintAc);
@@ -40,25 +36,31 @@ async function MintToken() {
       payer,
       mint,
       TokenAcccount.address,
-      payer.publicKey, 
-      1000*10**6
+      payer.publicKey,
+      1000 * 10 ** 6
     );
-    helper.addTransaction(mintSignature)
-
-
+    helper.addTransaction(mintSignature);
   } catch (error) {}
 }
 
-async function getBalance(){
-    const TokenAcccount = await splToken.getOrCreateAssociatedTokenAccount(
-        connection,
-        payer,
-        mint,
-        payer.publicKey
-      );
+async function getBalance() {
+  const TokenAcccount = await splToken.getOrCreateAssociatedTokenAccount(
+    connection,
+    payer,
+    mint,
+    payer.publicKey
+  );
 
- const balance= await connection.getTokenAccountBalance(TokenAcccount.address);
- console.log("Token available:", balance)
- 
+  const balance = await connection.getTokenAccountBalance(
+    TokenAcccount.address
+  );
+  console.log("Token available:", balance.value.uiAmount);
 }
+async function getMintinfo() {
+  const mintinfo = await splToken.getMint(connection, mint);
+  console.log("Mint account info is :", mintinfo);
+}
+
+console.log("balacnce after mint");
 getBalance();
+getMintinfo();
