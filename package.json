@@ -2,7 +2,7 @@
   "name": "spltoken",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +10,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "^3.4.0",
+    "@metaplex-foundation/umi": "^1.0.0",
+    "@metaplex-foundation/umi-bundle-defaults": "^1.0.0",
+    "@metaplex-foundation/umi-web3js-adapters": "^1.0.0",
     "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "^1.98.0"
   }

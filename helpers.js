@@ -1,14 +1,14 @@
-const fs = require("fs");
-console.log(fs);
+import {readFileSync, writeFileSync} from "fs";
 
-function addTransaction(signature) {
+
+export function addTransaction(signature) {
   try {
-    const Datas = JSON.parse(fs.readFileSync("./Datas.json"));
+    const Datas = JSON.parse(readFileSync("./Datas.json"));
     Datas.transaction.push(signature);
-    fs.writeFileSync("./Datas.json", JSON.stringify(Datas));
+    writeFileSync("./Datas.json", JSON.stringify(Datas));
     console.log("Transaction stored Successfully..");
   } catch (error) {
     console.log("error: ", error);
   }
 }
-module.exports = { addTransaction };
+

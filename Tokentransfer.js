@@ -1,24 +1,19 @@
-const web3 = require("@solana/web3.js");
-const splTokens = require("@solana/spl-token");
-const fs = require("fs");
+import {Connection, clusterApiUrl, PublicKey, Keypair} from "@solana/web3.js"
+import {TOKEN_PROGRAM_ID, getOrCreateAssociatedTokenAccount, transfer, createTransferInstruction} from "@solana/spl-token"
+import {readFileSync, writeFileSync} from "fs"
 
-const {
-  TOKEN_PROGRAM_ID,
-  getOrCreateAssociatedTokenAccount,
-  transfer,
-  createTransferInstruction,
-} = splTokens;
 
-const connection = new web3.Connection(
-  web3.clusterApiUrl("devnet"),
+
+const connection = new Connection(
+ clusterApiUrl("devnet"),
   "confirmed"
 );
 const data = JSON.parse(fs.readFileSync("./data.json"));
 const SecretKeys = Uint8Array.from(data.SecretKey);
 
-const payer = web3.Keypair.fromSecretKey(SecretKeys);
+const payer = Keypair.fromSecretKey(SecretKeys);
 
-const newwallet = web3.Keypair.generate();
+const newwallet = Keypair.generate();
 
 const newSecretkey = [
   34, 205, 30, 8, 116, 187, 247, 22, 32, 83, 140, 169, 204, 125, 151, 29, 73,
@@ -31,7 +26,7 @@ const toSecrets = Uint8Array.from(newSecretkey);
 const toAccount = web3.Keypair.fromSecretKey(toSecrets);
 
 console.log("toAccount", toAccount);
-const datas = JSON.parse(fs.readFileSync("./Datas.json"));
+const datas = JSON.parse(readFileSync("./Datas.json"));
 const mint = new web3.PublicKey(datas.mintAc);
 console.log(mint);
 
