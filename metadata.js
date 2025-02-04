@@ -1,6 +1,7 @@
 import {
     MPL_TOKEN_METADATA_PROGRAM_ID,
     createMetadataAccountV3,
+    updateMetadataAccountV2, 
     mplTokenMetadata,
 } from "@metaplex-foundation/mpl-token-metadata";
 import {readFileSync,  writeFileSync, existsSync} from "fs";
@@ -41,7 +42,7 @@ const tokenmetadata = {
   };
 
   const updatedmetadata = {
-    name: "Pak Rupees Token",
+    name: "Pak Token",
     symbol: "PKRT",
     uri: "https://amber-secure-egret-840.mypinata.cloud/ipfs/bafybeifwiym4fv77z7qejnvarsnypocqliswwwpaomyysxbtwldakdqwla",
     sellerFeeBasisPoints: 0,
@@ -49,6 +50,8 @@ const tokenmetadata = {
     collection: null,
     uses: null,
   };
+
+  const tokenImage="https://ipfs.io/ipfs/bafybeifwiym4fv77z7qejnvarsnypocqliswwwpaomyysxbtwldakdqwla"
 
   async function addMetadata() {
     try {
@@ -61,7 +64,7 @@ const tokenmetadata = {
       const metadatainstruction = createMetadataAccountV3(umi, {
         mint: mint,
         mintAuthority: signer,
-        data: tokenmetadata,
+        data: updatedmetadata,
         isMutable: true,
         collectionDetails: null,
         
@@ -78,4 +81,19 @@ const tokenmetadata = {
     }
   }
 
-  addMetadata();
+  async function updateMetadata(){
+    try {
+
+      const updatainstruction=  updateMetadataAccountV2(umi, {
+        
+        
+
+      })
+
+      
+    } catch (error) {
+      
+    }
+  }
+
+  addMetadata(); 

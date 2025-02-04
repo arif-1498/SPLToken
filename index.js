@@ -12,6 +12,7 @@ import {
   createAccount,
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
+  getMint,
 } from "@solana/spl-token";
 import {readFileSync,  writeFileSync, existsSync} from "fs";
 import {
@@ -96,4 +97,13 @@ async function creatToken() {
   }
 }
 
+
+
+(async ()=>{
+  const mintAc = new PublicKey(
+    "AgxeRiwhUT3ZCBq9d7USZSbhXdS86XhKih2zqkGeboMa"
+  );
+  const tokeninfo = await connection.getAccountInfo( mintAc )
+  console.log("token infor : " , tokeninfo)
+})()
 
