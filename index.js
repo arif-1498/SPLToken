@@ -24,16 +24,18 @@ import {none,createSignerFromKeypair,  } from "@metaplex-foundation/umi";
 import {fromWeb3JsKeypair} from '@metaplex-foundation/umi-web3js-adapters'
 
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-const umi = createUmi(clusterApiUrl("devnet"), "confirmed").use(
+
+
+const umi = createUmi(clusterApiUrl("devnet")).use(
   mplTokenMetadata()
-);
-
+)
 const data = JSON.parse(readFileSync("./data.json"));
-
 const SecretKeys = Uint8Array.from(data.SecretKey);
-
-
 const payer = Keypair.fromSecretKey(SecretKeys);
+const signer= createSignerFromKeypair(umi, fromWeb3JsKeypair(payer));
+umi.identity=signer;
+console.log("signer is : ", signer)
+
 console.log(payer);
 console.log("payer public key:", payer.publicKey.toBase58());
 
@@ -43,7 +45,7 @@ async function checkbalance() {
 }
 
 const metadataProgramId = new PublicKey(MPL_TOKEN_METADATA_PROGRAM_ID);
-
+  
 
 function storageData(value) {
   if (!existsSync("./Datas.json")) {
@@ -71,15 +73,8 @@ function addTransaction(signatiuretx) {
 }
 
 
-const tokenmetadata = {
-  name: "Pak Rupees Token",
-  symbol: "PKRT",
-  uri: "https://ibb.co/znmNjyY",
-  sellerFeeBasisPoints: 0,
-  creators: null,
-  collection: null,
-  uses: null,
-};
+
+
 async function creatToken() {
   try {
     const mintAddress = await createMint(
@@ -98,48 +93,6 @@ async function creatToken() {
     console.log("mint address store successfully...");
   } catch (error) {
     console.log("token creation failed:", error);
-  }
-}
-
-async function addMetadata() {
-  try {
-    const mintAc = new PublicKey(
-      "AgxeRiwhUT3ZCBq9d7USZSbhXdS86XhKih2zqkGeboMa"
-    );
-    console.log(mintAc);
-
-    const metadataAccount = PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("metadata"),
-        mintAc.toBuffer(),
-        metadataProgramId.toBuffer(),
-      ],
-      metadataProgramId
-    )[0];
-
-    console.log(metadataAccount);
-
-    const metadatainstruction = createMetadataAccountV3(umi, {
-      mint: mintAc,
-      mintAuthority: payer.publicKey,
-      isMutable: true,
-      collectionDetails: null,
-      data: tokenmetadata,
-    }).getInstructions();
-
-    const transactions = new Transaction().add(metadatainstruction);
-    const signature = await sendAndConfirmRawTransaction(
-      connection,
-      transactions,
-      [payer, mintkeypair],
-      undefined
-    );
-
-    console.log(
-      `🔗 Explorer URL: https://explorer.solana.com/tx/${signature}?cluster=devnet`
-    );
-  } catch (error) {
-    console.log("errors :", error);
   }
 }
 
