@@ -4,6 +4,7 @@ import {
     updateMetadataAccountV2, 
     mplTokenMetadata,
     updateMetadataAccountV2, 
+    createAndMint
 } from "@metaplex-foundation/mpl-token-metadata";
 import {readFileSync,  writeFileSync, existsSync} from "fs";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
@@ -90,4 +91,16 @@ const tokenmetadata = {
     })
   }
 
-  addMetadata();
+
+  (async ()=>{
+   try {
+   const Ix = createAndMint()
+    
+   } catch (error) {
+    
+   }
+
+
+  })()
+
+  
