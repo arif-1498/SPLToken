@@ -1,6 +1,7 @@
 import {
     MPL_TOKEN_METADATA_PROGRAM_ID,
     createMetadataAccountV3,
+    updateMetadataAccountV2, 
     mplTokenMetadata,
     updateMetadataAccountV2, 
 } from "@metaplex-foundation/mpl-token-metadata";
@@ -51,6 +52,8 @@ const tokenmetadata = {
     uses: null,
   };
 
+  const tokenImage="https://ipfs.io/ipfs/bafybeifwiym4fv77z7qejnvarsnypocqliswwwpaomyysxbtwldakdqwla"
+
   async function addMetadata() {
     try {
       const mintAc = new PublicKey(
@@ -62,6 +65,7 @@ const tokenmetadata = {
       const metadatainstruction = createMetadataAccountV3(umi, {
         mint: mint,
         mintAuthority: signer,
+        data: updatedmetadata,
         data: updatedmetadata,
         isMutable: true,
         collectionDetails: null,
