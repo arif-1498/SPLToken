@@ -2,6 +2,7 @@ import {
     MPL_TOKEN_METADATA_PROGRAM_ID,
     createMetadataAccountV3,
     mplTokenMetadata,
+    updateMetadataAccountV2, 
 } from "@metaplex-foundation/mpl-token-metadata";
 import {readFileSync,  writeFileSync, existsSync} from "fs";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
@@ -41,9 +42,9 @@ const tokenmetadata = {
   };
 
   const updatedmetadata = {
-    name: "Pak Rupees Token",
-    symbol: "PKRT",
-    uri: "https://amber-secure-egret-840.mypinata.cloud/ipfs/bafybeifwiym4fv77z7qejnvarsnypocqliswwwpaomyysxbtwldakdqwla",
+    name: "Gold PKR Token",
+    symbol: "PKTC",
+    uri: "https://amber-secure-egret-840.mypinata.cloud/ipfs/bafkreiefrfaxznrvs45ahlcwuzuy63lg2wjl3ktorhtohfud3eqng5e4uq",
     sellerFeeBasisPoints: 0,
     creators: null,
     collection: null,
@@ -53,7 +54,7 @@ const tokenmetadata = {
   async function addMetadata() {
     try {
       const mintAc = new PublicKey(
-        "AgxeRiwhUT3ZCBq9d7USZSbhXdS86XhKih2zqkGeboMa"
+        "9QP8uZPTp8mfjZjFNGtgQYcdRkstKFKFMA85ZWsNwxRu"
       );
 
       const mint= fromWeb3JsPublicKey(mintAc)
@@ -61,7 +62,7 @@ const tokenmetadata = {
       const metadatainstruction = createMetadataAccountV3(umi, {
         mint: mint,
         mintAuthority: signer,
-        data: tokenmetadata,
+        data: updatedmetadata,
         isMutable: true,
         collectionDetails: null,
         
@@ -76,6 +77,13 @@ const tokenmetadata = {
     } catch (error) {
       console.log("errors :", error);
     }
+  }
+
+  async function updataMetadat(){
+    const updataIntructions= updateMetadataAccountV2(umi, {
+        
+        
+    })
   }
 
   addMetadata();

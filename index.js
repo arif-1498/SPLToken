@@ -97,3 +97,6 @@ async function creatToken() {
 }
 
 
+
+creatToken()
+
