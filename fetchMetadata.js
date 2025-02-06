@@ -13,9 +13,9 @@ const SecretKeys = Uint8Array.from(data.SecretKey);
 const payer = Keypair.fromSecretKey(SecretKeys);
 const signer= createSignerFromKeypair(umi, fromWeb3JsKeypair(payer));
 umi.use(signerIdentity(signer, true))
-const mintPK=  new PublicKey("9QP8uZPTp8mfjZjFNGtgQYcdRkstKFKFMA85ZWsNwxRu"); 
+const mintPK=  new PublicKey("Fsgs4R2Bv5gT5Zu7kKkWKu5aJLUoYkfPtgpgv7w25Cui"); 
 
-//const mint = fromWeb3JsPublicKey(mintPK)
+const mint = fromWeb3JsPublicKey(mintPK);
 (async()=>{
     const asset = await fetchDigitalAsset(umi, mintPK)
     console.log("asset:", asset)

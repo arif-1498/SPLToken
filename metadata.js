@@ -62,11 +62,12 @@ const datas = JSON.parse(readFileSync("./Datas.json"));
 console.log(datas.mintAc);
 
 const mintPK = new PublicKey(datas.mintAc);
+const mint = fromWeb3JsPublicKey(mintPK);
 
 async function addMetadata() {
   try {
 
-    const mint = fromWeb3JsPublicKey(mintPK);
+    
 
     const metadatainstruction = createMetadataAccountV3(umi, {
       mint: mint,
@@ -85,8 +86,31 @@ async function addMetadata() {
   }
 }
 
+const metaDataProgramId= new PublicKey(MPL_TOKEN_METADATA_PROGRAM_ID)
+
+
+const MetadataPID = fromWeb3JsPublicKey(metaDataProgramId);
+const metadataAccount = umi.eddsa.findPda(MetadataPID, [
+  Buffer.from("metadata"),
+  MetadataPID.toBuffer(),
+  mint.toBuffer(),
+]);
+
+
 async function updateTokenMetadata() {
   try {
+    const updateInstruction = updateMetadataAccountV2(umi, {
+      metadata: metadataAccount,
+      updateAuthority: payer.publicKey,
+      data: updatedmetadata,
+      newUpdateAuthority: none(),
+      primarySaleHappened: none(),
+      isMutable: true,
+    });
+
+    const trx = await updateInstruction.buildAndSign(umi);
+    const signature = await umi.rpc.sendTransaction(trx);
+    console.log("Metadata updated. Signature:", signature);
    
 
   } catch (error) {
@@ -94,4 +118,4 @@ async function updateTokenMetadata() {
   }
 }
 
-addMetadata();
+updateTokenMetadata();
