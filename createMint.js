@@ -35,24 +35,27 @@ console.log("signer is : ", signer)
 
 
   const tokenData = {
-    name: "Gold PKR Token",
-    symbol: "PKTC",
-    uri: "https://amber-secure-egret-840.mypinata.cloud/ipfs/bafkreiefrfaxznrvs45ahlcwuzuy63lg2wjl3ktorhtohfud3eqng5e4uq",
+    name: "PK Golden Coin",
+    symbol: "PKGT",
+    uri: "https://raw.githubusercontent.com/arif-1498/TokenData/main/metadatas.json",
     
   };
 
-  const tokenImage="https://ipfs.io/ipfs/bafybeifwiym4fv77z7qejnvarsnypocqliswwwpaomyysxbtwldakdqwla"
+
 
 
 const mintSecret=[
-    192, 254, 111,  67, 181, 237, 247, 193, 116,  76,  22,
-    220,  80, 224,  20, 232, 228, 129,  97, 222, 105,  28,
-    103, 146,  79,  54, 141, 181,  68, 125, 177,  39, 222,
-    194, 202,  25, 249,  41, 232,  34,  11,  32,  13,   1,
-     66, 222, 138, 242,  53,  63, 125, 241,  91,  70, 103,
-     16, 244, 110, 172, 167, 197, 242, 250, 124
-  ]
+  203, 231, 219, 147, 227, 207, 183,   6,  4, 184, 220,
+  156, 106, 228, 250, 187,  33, 228, 147, 93, 226,  87,
+  142,  84, 229,  61, 227, 158,  37,  52, 44,  57, 198,
+  146, 182,  25,   3,  83, 212,  87, 228, 15,   6, 116,
+  228, 125,  45, 161, 160, 133,  39,  31, 90, 166,  95,
+  191, 227, 145, 124, 197, 234, 216,  74, 27
+]
 
+
+ //const newmint=generateSigner(umi)
+ //console.log("new Mint: ",newmint)
 
   const mintKey = Uint8Array.from(mintSecret);
   const mint = Keypair.fromSecretKey(mintKey);
@@ -62,24 +65,34 @@ console.log("the mint is", mintAddress)
 
 
 async  function creatTokenWithMint(){
+  try {
     const mintInstruction=createAndMint(umi, {
-        mint: mintAddress, 
-        authority:payer.publicKey,
-        name: tokenData.name, 
-        symbol:tokenData.symbol, 
-        uri:tokenData.uri, 
-        sellerFeeBasisPoints: 0,
-        decimals: 6, 
-        amount: 100000*10**6, 
-        tokenOwner:payer.publicKey, 
-        tokenStandard: TokenStandard.Fungible, 
+      mint: mintAddress, 
+      authority:payer.publicKey,
+      name: tokenData.name, 
+      symbol:tokenData.symbol, 
+      uri:tokenData.uri, 
+      sellerFeeBasisPoints: 0,
+      decimals: 6, 
+      amount: 100000*10**6, 
+      tokenOwner:payer.publicKey, 
+      tokenStandard: TokenStandard.Fungible, 
 
-    })
+  })
 
-    const trasactions= await mintInstruction.buildAndSign(umi);
-    const signaturetrx=  await umi.rpc.sendTransaction(trasactions)
-    console.log(signaturetrx)
+  const trasactions= await mintInstruction.buildAndSign(umi);
+  const signaturetrx=  await umi.rpc.sendTransaction(trasactions)
+  console.log(signaturetrx)
+    
+  } catch (error) {
+    console.log("errors :", error)
+  }
+   
 
 }
 
-creatTokenWithMint()
+creatTokenWithMint();
+
+
+
+

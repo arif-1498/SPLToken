@@ -102,11 +102,4 @@ async function creatToken() {
 creatToken()
 
 
-(async ()=>{
-  const mintAc = new PublicKey(
-    "AgxeRiwhUT3ZCBq9d7USZSbhXdS86XhKih2zqkGeboMa"
-  );
-  const tokeninfo = await connection.getAccountInfo( mintAc )
-  console.log("token infor : " , tokeninfo)
-})()
 
