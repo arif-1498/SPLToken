@@ -35,7 +35,7 @@ console.log("signer is : ", signer)
 const tokenmetadata = {
     name: "Pak Rupees Token",
     symbol: "PKRT",
-    uri: "https://amber-secure-egret-840.mypinata.cloud/ipfs/bafybeiaqq4koq4tmbmry7mhxnwficfdyoezs7jwe224ab36n3ktizjnsay",
+    uri: "https://ibb.co/rGTKvNfc" ,
     sellerFeeBasisPoints: 0,
     creators: null,
     collection: null,
@@ -52,7 +52,7 @@ const tokenmetadata = {
     uses: null,
   };
 
-  const tokenImage="https://ipfs.io/ipfs/bafybeifwiym4fv77z7qejnvarsnypocqliswwwpaomyysxbtwldakdqwla"
+
 
   async function addMetadata() {
     try {
@@ -65,7 +65,6 @@ const tokenmetadata = {
       const metadatainstruction = createMetadataAccountV3(umi, {
         mint: mint,
         mintAuthority: signer,
-        data: updatedmetadata,
         data: updatedmetadata,
         isMutable: true,
         collectionDetails: null,
