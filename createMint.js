@@ -37,7 +37,7 @@ console.log("signer is : ", signer)
   const tokenData = {
     name: "PK Golden Coin",
     symbol: "PKGT",
-    uri: "https://raw.githubusercontent.com/arif-1498/TokenData/main/metadatas.json",
+    uri: "https://amber-secure-egret-840.mypinata.cloud/ipfs/bafkreifaaov3dvhjc6q4icaxrzemhnun3dte76kdi3ab6i2zngap77yvxy",
     
   };
 
@@ -45,12 +45,12 @@ console.log("signer is : ", signer)
 
 
 const mintSecret=[
-  203, 231, 219, 147, 227, 207, 183,   6,  4, 184, 220,
-  156, 106, 228, 250, 187,  33, 228, 147, 93, 226,  87,
-  142,  84, 229,  61, 227, 158,  37,  52, 44,  57, 198,
-  146, 182,  25,   3,  83, 212,  87, 228, 15,   6, 116,
-  228, 125,  45, 161, 160, 133,  39,  31, 90, 166,  95,
-  191, 227, 145, 124, 197, 234, 216,  74, 27
+  35, 140, 224,  69, 174, 229,  63,  82,  26, 122, 150,
+ 157,  47,   9,   7, 214, 196, 176,  42, 252,  73,  13,
+ 100, 152,   2, 204,  64,  30, 237, 215, 122, 219, 122,
+ 247, 233,   9,  53,  16,  39,  78, 162,  17, 116, 185,
+ 230,  50,  19, 188,  80, 159, 108, 233,  68,  82, 205,
+ 176,   2,  48,  15, 144, 141, 132,  89,  65
 ]
 
 
@@ -91,7 +91,7 @@ async  function creatTokenWithMint(){
 
 }
 
-creatTokenWithMint();
+creatTokenWithMint()
 
 
 
