@@ -1,92 +1,121 @@
 import {
-    MPL_TOKEN_METADATA_PROGRAM_ID,
-    createMetadataAccountV3,
-    updateMetadataAccountV2, 
-    mplTokenMetadata,
-    updateMetadataAccountV2, 
+  MPL_TOKEN_METADATA_PROGRAM_ID,
+  createMetadataAccountV3,
+  mplTokenMetadata,
+  updateMetadataAccountV2,
+  createAndMint,
 } from "@metaplex-foundation/mpl-token-metadata";
-import {readFileSync,  writeFileSync, existsSync} from "fs";
+import { readFileSync, writeFileSync, existsSync } from "fs";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import { none, createSignerFromKeypair, signerIdentity } from "@metaplex-foundation/umi";
-import { fromWeb3JsKeypair, fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import {
-    PublicKey,
-    Connection,
-    clusterApiUrl,
-    Transaction,
-    sendAndConfirmRawTransaction,
-    sendAndConfirmTransaction,
-    Keypair,
-  } from "@solana/web3.js";
+  none,
+  createSignerFromKeypair,
+  signerIdentity,
+} from "@metaplex-foundation/umi";
+import {
+  fromWeb3JsKeypair,
+  fromWeb3JsPublicKey,
+} from "@metaplex-foundation/umi-web3js-adapters";
+import {
+  PublicKey,
+  Connection,
+  clusterApiUrl,
+  Transaction,
+  sendAndConfirmRawTransaction,
+  sendAndConfirmTransaction,
+  Keypair,
+} from "@solana/web3.js";
 
-
-
-const umi = createUmi(clusterApiUrl("devnet")).use(
-    mplTokenMetadata()
-)
+const umi = createUmi(clusterApiUrl("devnet")).use(mplTokenMetadata());
 
 const data = JSON.parse(readFileSync("./data.json"));
 const SecretKeys = Uint8Array.from(data.SecretKey);
 const payer = Keypair.fromSecretKey(SecretKeys);
-const signer= createSignerFromKeypair(umi, fromWeb3JsKeypair(payer));
-umi.use(signerIdentity(signer, true))
-console.log("signer is : ", signer)
+const signer = createSignerFromKeypair(umi, fromWeb3JsKeypair(payer));
+umi.use(signerIdentity(signer, true));
+console.log("signer is : ", signer);
 
 const tokenmetadata = {
-    name: "Pak Rupees Token",
-    symbol: "PKRT",
-    uri: "https://ibb.co/rGTKvNfc" ,
-    sellerFeeBasisPoints: 0,
-    creators: null,
-    collection: null,
-    uses: null,
-  };
+  name: "Pak Golden Coin",
+  symbol: "PGC",
+  uri: "https://amber-secure-egret-840.mypinata.cloud/ipfs/bafkreifaaov3dvhjc6q4icaxrzemhnun3dte76kdi3ab6i2zngap77yvxy",
+  sellerFeeBasisPoints: 0,
+  creators: null,
+  collection: null,
+  uses: null,
+};
 
-  const updatedmetadata = {
-    name: "Gold PKR Token",
-    symbol: "PKTC",
-    uri: "https://amber-secure-egret-840.mypinata.cloud/ipfs/bafkreiefrfaxznrvs45ahlcwuzuy63lg2wjl3ktorhtohfud3eqng5e4uq",
-    sellerFeeBasisPoints: 0,
-    creators: null,
-    collection: null,
-    uses: null,
-  };
+const updatedmetadata = {
+  name: "PAK GOLD COIN",
+  symbol: "PKGC",
+  uri: "https://raw.githubusercontent.com/arif-1498/TokenData/main/metadatas.json",
+  sellerFeeBasisPoints: 0,
+  creators: null,
+  collection: null,
+  uses: null,
+};
 
+const tokenImage =
+  "https://raw.githubusercontent.com/arif-1498/TokenData/main/metadatas.json";
 
+const datas = JSON.parse(readFileSync("./Datas.json"));
+console.log(datas.mintAc);
 
-  async function addMetadata() {
-    try {
-      const mintAc = new PublicKey(
-        "9QP8uZPTp8mfjZjFNGtgQYcdRkstKFKFMA85ZWsNwxRu"
-      );
+const mintPK = new PublicKey(datas.mintAc);
+const mint = fromWeb3JsPublicKey(mintPK);
 
-      const mint= fromWeb3JsPublicKey(mintAc)
-  
-      const metadatainstruction = createMetadataAccountV3(umi, {
-        mint: mint,
-        mintAuthority: signer,
-        data: updatedmetadata,
-        isMutable: true,
-        collectionDetails: null,
-        
-      })
+async function addMetadata() {
+  try {
 
-      const trx = await metadatainstruction.buildAndSign(umi);
-      const signature= await umi.rpc.sendTransaction(trx);
-       
-      console.log("signature", signature)
-      
+    
 
-    } catch (error) {
-      console.log("errors :", error);
-    }
+    const metadatainstruction = createMetadataAccountV3(umi, {
+      mint: mint,
+      mintAuthority: signer,
+      data: updatedmetadata,
+      isMutable: true,
+      collectionDetails: null,
+    });
+
+    const trx = await metadatainstruction.buildAndSign(umi);
+    const signature = await umi.rpc.sendTransaction(trx);
+
+    console.log("signature", signature);
+  } catch (error) {
+    console.log("errors :", error);
   }
+}
 
-  async function updataMetadat(){
-    const updataIntructions= updateMetadataAccountV2(umi, {
-        
-        
-    })
+const metaDataProgramId= new PublicKey(MPL_TOKEN_METADATA_PROGRAM_ID)
+
+
+const MetadataPID = fromWeb3JsPublicKey(metaDataProgramId);
+const metadataAccount = umi.eddsa.findPda(MetadataPID, [
+  Buffer.from("metadata"),
+  MetadataPID.toBuffer(),
+  mint.toBuffer(),
+]);
+
+
+async function updateTokenMetadata() {
+  try {
+    const updateInstruction = updateMetadataAccountV2(umi, {
+      metadata: metadataAccount,
+      updateAuthority: payer.publicKey,
+      data: updatedmetadata,
+      newUpdateAuthority: none(),
+      primarySaleHappened: none(),
+      isMutable: true,
+    });
+
+    const trx = await updateInstruction.buildAndSign(umi);
+    const signature = await umi.rpc.sendTransaction(trx);
+    console.log("Metadata updated. Signature:", signature);
+   
+
+  } catch (error) {
+    console.log("error:", error);
   }
+}
 
-  addMetadata();
+updateTokenMetadata();

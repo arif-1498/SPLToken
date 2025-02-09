@@ -39,3 +39,34 @@ async function creatToken() {
     console.log("token creation failed:", error);
   }
 }
+
+async function creatToken() {
+  try {
+    const mintAddress = await createMint(
+      connection,
+      payer,
+      payer.publicKey,
+      null,
+      6
+    );
+
+    console.log("mint address:", mintAddress.toBase58());
+  } catch (error) {
+    console.log("token creation failed:", error);
+  }
+}
+async function creatToken() {
+  try {
+    const mintAddress = await createMint(
+      connection,
+      payer,
+      payer.publicKey,
+      null,
+      6
+    );
+
+    console.log("mint address:", mintAddress.toBase58());
+  } catch (error) {
+    console.log("token creation failed:", error);
+  }
+}
