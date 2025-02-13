@@ -99,15 +99,24 @@ const metadataAccount = umi.eddsa.findPda(MetadataPID, [
 
 async function updateTokenMetadata() {
   try {
-    const updateInstruction = updateMetadataAccountV2(umi, {
-      metadata: metadataAccount,
-      updateAuthority: payer.publicKey,
-      data: updatedmetadata,
-      newUpdateAuthority: none(),
-      primarySaleHappened: none(),
-      isMutable: true,
-    });
-
+    const updateMetadataAccountV2Args = {
+      metadata: fromWeb3JsPublicKey(new PublicKey(metadata.publicKey)), //Replace with the PublicKey or PDA of the metadata account you want to update
+      updateAuthority: umi.identity,
+      data: {
+        name: offChainMetadata.name,
+        symbol: offChainMetadata.symbol,
+        uri: "https://ipfs.io/ipfs/QmNunKefNdgQh6XHCAqcjcta5uxf9gaNGWvJPahQsxGjHb", //Replace with the actual URL of the metadata uploaded on publicly accessible storage
+        sellerFeeBasisPoints: 0,
+        creators: metadata.creators, //Verified creators couldn't be changed
+        collection: null,
+        uses: null
+      }
+    }
+  
+    const instruction = updateMetadataAccountV2(
+      umi,
+      updateMetadataAccountV2Args
+    )
     const trx = await updateInstruction.buildAndSign(umi);
     const signature = await umi.rpc.sendTransaction(trx);
     console.log("Metadata updated. Signature:", signature);

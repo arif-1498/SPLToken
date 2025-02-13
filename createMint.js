@@ -4,7 +4,7 @@ import {
     updateMetadataAccountV2, 
     mplTokenMetadata,
     createAndMint,
-    TokenStandard
+    TokenStandard, updateV1
 } from "@metaplex-foundation/mpl-token-metadata";
 import {readFileSync,  writeFileSync, existsSync} from "fs";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
@@ -35,22 +35,22 @@ console.log("signer is : ", signer)
 
 
   const tokenData = {
-    name: "PK Golden Coin",
-    symbol: "PKGT",
-    uri: "https://amber-secure-egret-840.mypinata.cloud/ipfs/bafkreifaaov3dvhjc6q4icaxrzemhnun3dte76kdi3ab6i2zngap77yvxy",
+    name: "Gold Coin",
+    symbol: "GTC",
+    uri: "https://ipfs.io/ipfs/bafkreiblbltan6lkthnvdchqv3vd7ybev75rf6hotta3xuev4yfva2jwum",
     
   };
 
 
 
 
-const mintSecret=[
-  35, 140, 224,  69, 174, 229,  63,  82,  26, 122, 150,
- 157,  47,   9,   7, 214, 196, 176,  42, 252,  73,  13,
- 100, 152,   2, 204,  64,  30, 237, 215, 122, 219, 122,
- 247, 233,   9,  53,  16,  39,  78, 162,  17, 116, 185,
- 230,  50,  19, 188,  80, 159, 108, 233,  68,  82, 205,
- 176,   2,  48,  15, 144, 141, 132,  89,  65
+const mintSecret=  [
+  124, 196, 119,  30,  43, 250, 250, 128,  19,   0,  47,
+   42, 184, 223, 179, 159,  54,  99, 123,  40, 222,  26,
+   55, 203,  66,  10,  39, 172, 153,  38, 125, 106, 168,
+  253,  37,  52,  27,  95, 221, 195, 191, 109, 127,  93,
+  115, 141,  88,  48, 199, 106, 144, 126,  91, 184,  65,
+  174,  57,  24,  97, 147,  53, 218, 227, 146
 ]
 
 
@@ -80,6 +80,7 @@ async  function creatTokenWithMint(){
 
   })
 
+
   const trasactions= await mintInstruction.buildAndSign(umi);
   const signaturetrx=  await umi.rpc.sendTransaction(trasactions)
   console.log(signaturetrx)
@@ -91,7 +92,28 @@ async  function creatTokenWithMint(){
 
 }
 
+async function updataMetadata(){
+  try {
+    const updateIx= updateV1(umi, {
+      mint:mintAddress, 
+      newUpdateAuthority: payer.publicKey,
+      data: tokenData, 
+      
+    })
+  } catch (error) {
+    
+  }
+}
+
 creatTokenWithMint()
+
+
+
+
+
+
+
+
 
 
 

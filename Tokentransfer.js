@@ -8,7 +8,7 @@ const connection = new Connection(
  clusterApiUrl("devnet"),
   "confirmed"
 );
-const data = JSON.parse(fs.readFileSync("./data.json"));
+const data = JSON.parse(readFileSync("./data.json"));
 const SecretKeys = Uint8Array.from(data.SecretKey);
 
 const payer = Keypair.fromSecretKey(SecretKeys);
@@ -23,19 +23,21 @@ const newSecretkey = [
 ];
 const toSecrets = Uint8Array.from(newSecretkey);
 
-const toAccount = web3.Keypair.fromSecretKey(toSecrets);
+const toAccount = Keypair.fromSecretKey(toSecrets);
 
 console.log("toAccount", toAccount);
 const datas = JSON.parse(readFileSync("./Datas.json"));
-const mint = new web3.PublicKey(datas.mintAc);
+const mint = new PublicKey(datas.mintAc);
 console.log(mint);
+
+const PkToken = new PublicKey("CNfNpejDgc1WUFSVhWBrhhFxbe1rfvqYxU8pUSCWuqFP")
 
 async function getATA(publickey) {
   try {
     const TokenAcccount = await getOrCreateAssociatedTokenAccount(
       connection,
       payer,
-      mint,
+      PkToken,
       publickey
     );
 
@@ -72,8 +74,11 @@ async function getBalance(tokenATA) {
   }
 }
 
+
+const toAddress= new PublicKey("FnrJBGGyUefo9LNkFJDAngTQ2RMungovpfTiY8gi9rRw");
+
 (async () => {
-  const toATA = await getATA(toAccount.publicKey);
+  const toATA = await getATA(toAddress);
   console.log("toATA Address", toATA);
   const fromATA = await getATA(payer.publicKey);
   console.log("fromAtta address", fromATA);
